@@ -9,7 +9,7 @@ answers clinic questions via a small RAG knowledge base, collects appointment de
 validates availability, stores records in Supabase, creates Google Calendar events, and
 triggers n8n reminder workflows.
 
-![Architecture Diagram](./Architecture_Diagram.png)
+![Architecture Diagram](./Week%201/Architecture_Diagram.png)
 
 > **Note:** This project uses demo clinic and patient data only. No real patient or
 > medical information is used.
