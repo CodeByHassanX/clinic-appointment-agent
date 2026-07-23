@@ -22,6 +22,6 @@ This JSON file is the exported Chatflow containing the visual nodes, connections
 Below are the screenshots demonstrating the AI agent correctly reading the knowledge base and answering patient queries:
 
 ![RAG Test 1](./screenshots/RAG_Test_01.png)
+![RAG Test 2](./screenshots/RAG_Test_02.png)
 ![RAG Test 3](./screenshots/RAG_Test_03.png)
 ![RAG Test 4](./screenshots/RAG_Test_04.png)
-![RAG Test 5](./screenshots/RAG_Test_05.png)
