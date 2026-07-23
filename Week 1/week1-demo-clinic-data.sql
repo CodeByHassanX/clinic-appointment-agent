@@ -74,7 +74,7 @@ insert into services (service_name, duration_minutes, price_range) values
 -- 4. DEMO PATIENTS -----------------------------------------------
 
 insert into patients (name, phone, email) values
-('Ali Raza', '+92-300-1234567', 'ali.raza.demo@example.com'),
+('Ali Raza', '+92-300-9876543', 'ali.raza.demo@example.com'),
 ('Fatima Noor', '+92-301-7654321', 'fatima.noor.demo@example.com'),
 ('Usman Tariq', '+92-333-9988776', null),
 ('Zainab Sheikh', null, 'zainab.sheikh.demo@example.com');
