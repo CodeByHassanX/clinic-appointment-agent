@@ -63,7 +63,7 @@ clinic-appointment-agent/
 |---|---|---|
 | 1 | Requirement analysis, setup, demo data, architecture | ✅ |
 | 2 | Clinic FAQ + RAG knowledge base | ✅ |
-| 3 | Chatbot flow + intent detection | 🔲 |
+| 3 | Chatbot flow + intent detection | ✅ |
 | 4 | Supabase database + data models | 🔲 |
 | 5 | Slot booking logic + validation | 🔲 |
 | 6 | Google Calendar + n8n workflows | 🔲 |
