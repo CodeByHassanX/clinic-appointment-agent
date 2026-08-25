@@ -398,131 +398,10 @@
       "dragging": false
     },
     {
-      "id": "conversationalRetrievalQAChain_0",
-      "position": {
-        "x": 1912.7432628168788,
-        "y": -47.449189726536304
-      },
-      "type": "customNode",
-      "data": {
-        "id": "conversationalRetrievalQAChain_0",
-        "label": "Conversational Retrieval QA Chain",
-        "version": 3,
-        "name": "conversationalRetrievalQAChain",
-        "type": "ConversationalRetrievalQAChain",
-        "baseClasses": [
-          "ConversationalRetrievalQAChain",
-          "BaseChain",
-          "Runnable"
-        ],
-        "category": "Chains",
-        "description": "Document QA - built on RetrievalQAChain to provide a chat history component",
-        "inputParams": [
-          {
-            "label": "Return Source Documents",
-            "name": "returnSourceDocuments",
-            "type": "boolean",
-            "optional": true,
-            "id": "conversationalRetrievalQAChain_0-input-returnSourceDocuments-boolean",
-            "display": true
-          },
-          {
-            "label": "Rephrase Prompt",
-            "name": "rephrasePrompt",
-            "type": "string",
-            "description": "Using previous chat history, rephrase question into a standalone question",
-            "warning": "Prompt must include input variables: {chat_history} and {question}",
-            "rows": 4,
-            "additionalParams": true,
-            "optional": true,
-            "default": "Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.\n\nChat History:\n{chat_history}\nFollow Up Input: {question}\nStandalone Question:",
-            "id": "conversationalRetrievalQAChain_0-input-rephrasePrompt-string",
-            "display": true
-          },
-          {
-            "label": "Response Prompt",
-            "name": "responsePrompt",
-            "type": "string",
-            "description": "Taking the rephrased question, search for answer from the provided context",
-            "warning": "Prompt must include input variable: {context}",
-            "rows": 4,
-            "additionalParams": true,
-            "optional": true,
-            "default": "I want you to act as a document that I am having a conversation with. Your name is \"AI Assistant\". Using the provided context, answer the user's question to the best of your ability using the resources provided.\nIf there is nothing in the context relevant to the question at hand, just say \"Hmm, I'm not sure\" and stop after that. Refuse to answer any question not about the info. Never break character.\n------------\n{context}\n------------\nREMEMBER: If there is no relevant information within the context, just say \"Hmm, I'm not sure\". Don't try to make up an answer. Never break character.",
-            "id": "conversationalRetrievalQAChain_0-input-responsePrompt-string",
-            "display": true
-          }
-        ],
-        "inputAnchors": [
-          {
-            "label": "Chat Model",
-            "name": "model",
-            "type": "BaseChatModel",
-            "id": "conversationalRetrievalQAChain_0-input-model-BaseChatModel",
-            "display": true
-          },
-          {
-            "label": "Vector Store Retriever",
-            "name": "vectorStoreRetriever",
-            "type": "BaseRetriever",
-            "id": "conversationalRetrievalQAChain_0-input-vectorStoreRetriever-BaseRetriever",
-            "display": true
-          },
-          {
-            "label": "Memory",
-            "name": "memory",
-            "type": "BaseMemory",
-            "optional": true,
-            "description": "If left empty, a default BufferMemory will be used",
-            "id": "conversationalRetrievalQAChain_0-input-memory-BaseMemory",
-            "display": true
-          },
-          {
-            "label": "Input Moderation",
-            "description": "Detect text that could generate harmful output and prevent it from being sent to the language model",
-            "name": "inputModeration",
-            "type": "Moderation",
-            "optional": true,
-            "list": true,
-            "id": "conversationalRetrievalQAChain_0-input-inputModeration-Moderation",
-            "display": true
-          }
-        ],
-        "inputs": {
-          "model": "{{chatGoogleGenerativeAI_0.data.instance}}",
-          "vectorStoreRetriever": "{{memoryVectorStore_0.data.instance}}",
-          "memory": "",
-          "returnSourceDocuments": "",
-          "rephrasePrompt": "Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.\n\nChat History:\n{chat_history}\nFollow Up Input: {question}\nStandalone Question:",
-          "responsePrompt": "You are a helpful assistant for Synexus Demo Clinic. Answer the user's question using only the clinic knowledge base provided below in {context}. If the answer isn't in the context, say 'Hmm, I'm not sure about that — would you like me to connect you with our staff?' and don't guess. Never provide medical advice or diagnosis. Stay focused on clinic hours, doctors, services, fees, policies, and appointment booking.\n\n------------\n{context}\n------------",
-          "inputModeration": ""
-        },
-        "outputAnchors": [
-          {
-            "id": "conversationalRetrievalQAChain_0-output-conversationalRetrievalQAChain-ConversationalRetrievalQAChain|BaseChain|Runnable",
-            "name": "conversationalRetrievalQAChain",
-            "label": "ConversationalRetrievalQAChain",
-            "description": "Document QA - built on RetrievalQAChain to provide a chat history component",
-            "type": "ConversationalRetrievalQAChain | BaseChain | Runnable"
-          }
-        ],
-        "outputs": {},
-        "selected": false
-      },
-      "width": 300,
-      "height": 535,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 1912.7432628168788,
-        "y": -47.449189726536304
-      },
-      "dragging": false
-    },
-    {
       "id": "chatGoogleGenerativeAI_0",
       "position": {
-        "x": 1450.6336856151026,
-        "y": -171.80050139743196
+        "x": 1460.9693791399575,
+        "y": -205.5841307243682
       },
       "type": "customNode",
       "data": {
@@ -784,7 +663,7 @@
           "cache": "",
           "modelName": "gemini-2.5-flash",
           "customModelName": "",
-          "temperature": 0.9,
+          "temperature": "0.9",
           "streaming": true,
           "allowImageUploads": "",
           "thinkingBudget": "",
@@ -812,9 +691,413 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 1450.6336856151026,
-        "y": -171.80050139743196
+        "x": 1460.9693791399575,
+        "y": -205.5841307243682
       }
+    },
+    {
+      "id": "customTool_0",
+      "position": {
+        "x": 379.29422989614125,
+        "y": 525.3781122227371
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customTool_0",
+        "label": "Custom Tool",
+        "version": 3,
+        "name": "customTool",
+        "type": "CustomTool",
+        "baseClasses": [
+          "CustomTool",
+          "Tool",
+          "StructuredTool",
+          "Runnable"
+        ],
+        "category": "Tools",
+        "description": "Use custom tool you've created in Flowise within chatflow",
+        "inputParams": [
+          {
+            "label": "Select Tool",
+            "name": "selectedTool",
+            "type": "asyncOptions",
+            "loadMethod": "listTools",
+            "id": "customTool_0-input-selectedTool-asyncOptions",
+            "display": true
+          },
+          {
+            "label": "Return Direct",
+            "name": "returnDirect",
+            "description": "Return the output of the tool directly to the user",
+            "type": "boolean",
+            "optional": true,
+            "id": "customTool_0-input-returnDirect-boolean",
+            "display": true
+          },
+          {
+            "label": "Custom Tool Name",
+            "name": "customToolName",
+            "type": "string",
+            "hidden": true,
+            "id": "customTool_0-input-customToolName-string",
+            "display": true
+          },
+          {
+            "label": "Custom Tool Description",
+            "name": "customToolDesc",
+            "type": "string",
+            "hidden": true,
+            "id": "customTool_0-input-customToolDesc-string",
+            "display": true
+          },
+          {
+            "label": "Custom Tool Schema",
+            "name": "customToolSchema",
+            "type": "string",
+            "hidden": true,
+            "id": "customTool_0-input-customToolSchema-string",
+            "display": true
+          },
+          {
+            "label": "Custom Tool Func",
+            "name": "customToolFunc",
+            "type": "string",
+            "hidden": true,
+            "id": "customTool_0-input-customToolFunc-string",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "selectedTool": "269db388-779d-4449-8491-f9fb04f8bd6a",
+          "returnDirect": "",
+          "customToolName": "",
+          "customToolDesc": "",
+          "customToolSchema": "",
+          "customToolFunc": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "customTool_0-output-customTool-CustomTool|Tool|StructuredTool|Runnable",
+            "name": "customTool",
+            "label": "CustomTool",
+            "description": "Use custom tool you've created in Flowise within chatflow",
+            "type": "CustomTool | Tool | StructuredTool | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 377,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 379.29422989614125,
+        "y": 525.3781122227371
+      }
+    },
+    {
+      "id": "retrieverTool_0",
+      "position": {
+        "x": 1061.6199155515526,
+        "y": 448.82465761960714
+      },
+      "type": "customNode",
+      "data": {
+        "id": "retrieverTool_0",
+        "label": "Retriever Tool",
+        "version": 3,
+        "name": "retrieverTool",
+        "type": "RetrieverTool",
+        "baseClasses": [
+          "RetrieverTool",
+          "DynamicTool",
+          "Tool",
+          "StructuredTool",
+          "Runnable"
+        ],
+        "category": "Tools",
+        "description": "Use a retriever as allowed tool for agent",
+        "inputParams": [
+          {
+            "label": "Retriever Name",
+            "name": "name",
+            "type": "string",
+            "placeholder": "search_state_of_union",
+            "id": "retrieverTool_0-input-name-string",
+            "display": true
+          },
+          {
+            "label": "Retriever Description",
+            "name": "description",
+            "type": "string",
+            "description": "When should agent uses to retrieve documents",
+            "rows": 3,
+            "placeholder": "Searches and returns documents regarding the state-of-the-union.",
+            "id": "retrieverTool_0-input-description-string",
+            "display": true
+          },
+          {
+            "label": "Return Source Documents",
+            "name": "returnSourceDocuments",
+            "type": "boolean",
+            "optional": true,
+            "id": "retrieverTool_0-input-returnSourceDocuments-boolean",
+            "display": true
+          },
+          {
+            "label": "Additional Metadata Filter",
+            "name": "retrieverToolMetadataFilter",
+            "type": "json",
+            "description": "Add additional metadata filter on top of the existing filter from vector store",
+            "optional": true,
+            "additionalParams": true,
+            "hint": {
+              "label": "What can you filter?",
+              "value": "Add additional filters to vector store. You can also filter with flow config, including the current \"state\":\n- `$flow.sessionId`\n- `$flow.chatId`\n- `$flow.chatflowId`\n- `$flow.input`\n- `$flow.state`\n"
+            },
+            "acceptVariable": true,
+            "id": "retrieverTool_0-input-retrieverToolMetadataFilter-json",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Retriever",
+            "name": "retriever",
+            "type": "BaseRetriever",
+            "id": "retrieverTool_0-input-retriever-BaseRetriever",
+            "display": true
+          }
+        ],
+        "inputs": {
+          "name": "clinic_knowledge_base",
+          "description": "Use this to answer questions about clinic hours, doctors, services, fees, and policies.",
+          "retriever": "{{memoryVectorStore_0.data.instance}}",
+          "returnSourceDocuments": "",
+          "retrieverToolMetadataFilter": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "retrieverTool_0-output-retrieverTool-RetrieverTool|DynamicTool|Tool|StructuredTool|Runnable",
+            "name": "retrieverTool",
+            "label": "RetrieverTool",
+            "description": "Use a retriever as allowed tool for agent",
+            "type": "RetrieverTool | DynamicTool | Tool | StructuredTool | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 659,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1061.6199155515526,
+        "y": 448.82465761960714
+      },
+      "dragging": false
+    },
+    {
+      "id": "toolAgent_0",
+      "position": {
+        "x": 2085.531892052781,
+        "y": 389.3095583020073
+      },
+      "type": "customNode",
+      "data": {
+        "id": "toolAgent_0",
+        "label": "Tool Agent",
+        "version": 2,
+        "name": "toolAgent",
+        "type": "AgentExecutor",
+        "baseClasses": [
+          "AgentExecutor",
+          "BaseChain",
+          "Runnable"
+        ],
+        "category": "Agents",
+        "description": "Agent that uses Function Calling to pick the tools and args to call",
+        "inputParams": [
+          {
+            "label": "System Message",
+            "name": "systemMessage",
+            "type": "string",
+            "default": "You are a helpful AI assistant.",
+            "description": "If Chat Prompt Template is provided, this will be ignored",
+            "rows": 4,
+            "optional": true,
+            "additionalParams": true,
+            "id": "toolAgent_0-input-systemMessage-string",
+            "display": true
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "additionalParams": true,
+            "id": "toolAgent_0-input-maxIterations-number",
+            "display": true
+          },
+          {
+            "label": "Enable Detailed Streaming",
+            "name": "enableDetailedStreaming",
+            "type": "boolean",
+            "default": false,
+            "description": "Stream detailed intermediate steps during agent execution",
+            "optional": true,
+            "additionalParams": true,
+            "id": "toolAgent_0-input-enableDetailedStreaming-boolean",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "id": "toolAgent_0-input-tools-Tool",
+            "display": true
+          },
+          {
+            "label": "Memory",
+            "name": "memory",
+            "type": "BaseChatMemory",
+            "id": "toolAgent_0-input-memory-BaseChatMemory",
+            "display": true
+          },
+          {
+            "label": "Tool Calling Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "description": "Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat",
+            "id": "toolAgent_0-input-model-BaseChatModel",
+            "display": true
+          },
+          {
+            "label": "Chat Prompt Template",
+            "name": "chatPromptTemplate",
+            "type": "ChatPromptTemplate",
+            "description": "Override existing prompt with Chat Prompt Template. Human Message must includes {input} variable",
+            "optional": true,
+            "id": "toolAgent_0-input-chatPromptTemplate-ChatPromptTemplate",
+            "display": true
+          },
+          {
+            "label": "Input Moderation",
+            "description": "Detect text that could generate harmful output and prevent it from being sent to the language model",
+            "name": "inputModeration",
+            "type": "Moderation",
+            "optional": true,
+            "list": true,
+            "id": "toolAgent_0-input-inputModeration-Moderation",
+            "display": true
+          }
+        ],
+        "inputs": {
+          "tools": [
+            "{{retrieverTool_0.data.instance}}",
+            "{{customTool_0.data.instance}}"
+          ],
+          "memory": "{{bufferMemory_0.data.instance}}",
+          "model": "{{chatGoogleGenerativeAI_0.data.instance}}",
+          "chatPromptTemplate": "",
+          "systemMessage": "# Intent Routing System Prompt\n\n### System Prompt for Clinic Agent (Tool Agent version — Week 4)\n\n> **MANDATORY RULES** (Apply to every single response, no exceptions):\n>\n> 1. **Always end your response with a tag on its own line:** `[Detected Intent: BOOK]`, `[Detected Intent: FAQ]`, `[Detected Intent: CANCEL]`, `[Detected Intent: RESCHEDULE]`, or `[Detected Intent: HUMAN]`. Never skip this.\n> 2. **For BOOK, CANCEL, or RESCHEDULE:** You **MUST** ask the patient for their missing details (e.g., name, phone number, and exact time) **BEFORE** taking any action or offering to connect them to staff.\n> 3. **CONCISENESS (CRITICAL):** Keep your answers extremely short and simple (maximum 1 or 2 sentences). Do not provide extra information like prices or durations unless the user specifically asks for them. *(Exceptions: You MUST explicitly state a doctor's full available days/hours if there is a scheduling conflict, AND you MUST explicitly state the cancellation or rescheduling policy when handling a CANCEL or RESCHEDULE request).*\n> 4. **For HUMAN intent:** You must ask for their name and contact info to create a support lead/callback, AND always state the clinic's phone number, `+92-321-4455667`, as an additional option.\n> 5. **You have two tools available:** `clinic_knowledge_base` (for answering FAQ questions) and `book_appointment` (for creating a real appointment record). Use `book_appointment` only once ALL required fields (patient name, contact, service, date, time) are known — never call it with missing information.\n\n---\n\nYou are the intelligent routing assistant for **Synexus Software Technologies' Demo Clinic**.\nYour job is to analyze the patient's message and determine their core intent.\n\nYou must classify every patient message into exactly one of the following 5 categories:\n\n- **BOOK**: The patient wants to schedule a new appointment, see a doctor, or find an available slot.\n- **FAQ**: The patient is asking a general question about the clinic (timings, location, prices, services offered, doctor credentials, or general policies).\n- **CANCEL**: The patient explicitly states they want to cancel or delete an existing appointment.\n- **RESCHEDULE**: The patient wants to change the date/time of an existing appointment.\n- **HUMAN**: The patient is frustrated, asking to speak to a real person, or has a medical question/concern an AI should not handle.\n\n---\n\n### Routing Rules:\n\n* **FAQ:** Use the `clinic_knowledge_base` tool to answer their question. Do not make up information not returned by the tool.\n* **BOOK:** Ask for the necessary details (Name, Service, Doctor if specified, Date, Time, Contact) that are still missing. Once ALL required fields are collected, call the `book_appointment` tool with those exact values. Report back to the patient using the tool's actual returned result (e.g. the real appointment status and ID) — do not say \"booked\" or \"confirmed\" unless the tool result says so.\n* **CANCEL / RESCHEDULE:** *(No live tool exists yet for these — still collect-and-handoff.)* You **MUST** state the policy: \"Cancellations require 12 hours notice, and rescheduling is free but subject to availability.\" Then ask for the patient's existing appointment details (Name, Contact, Date, Time) and confirm any new times requested. Once collected, tell them their details have been **collected and are ready for staff to confirm** — do not say the appointment is cancelled or rescheduled, since no backend action exists for these yet.\n* **HUMAN:** Politely inform them a staff member will follow up, ask for their details to create a support lead/callback, and provide the clinic's phone number. *(Exception: If it is a medical emergency, do NOT ask for a callback. Instruct them to visit the nearest hospital emergency room immediately and provide the clinic's phone number).*\n* **Ambiguous Messages:** If a message is too vague to classify, ask one clarifying question naming the specific options (e.g., \"Would you like to cancel, reschedule, or ask something about your appointment?\") rather than giving a generic offer to help. **You MUST use the `[Detected Intent: HUMAN]` tag for ambiguous messages.**\n* **Tone:** Use clear, polite, patient-friendly language at all times.\n\n---\n\n**REMINDER — EVERY RESPONSE MUST:**\n1. Be extremely short and concise (1-2 sentences).\n2. Ask for missing details first (for Book/Cancel/Reschedule) before taking action or offering handoff.\n3. End with a `[Detected Intent: X]` tag.\n4. For BOOK: only call `book_appointment` once every required field is known, and report its real result.\n5. For CANCEL/RESCHEDULE: still collect-and-handoff only — no tool exists for these yet.",
+          "inputModeration": "",
+          "maxIterations": "",
+          "enableDetailedStreaming": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "toolAgent_0-output-toolAgent-AgentExecutor|BaseChain|Runnable",
+            "name": "toolAgent",
+            "label": "AgentExecutor",
+            "description": "Agent that uses Function Calling to pick the tools and args to call",
+            "type": "AgentExecutor | BaseChain | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 489,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 2085.531892052781,
+        "y": 389.3095583020073
+      }
+    },
+    {
+      "id": "bufferMemory_0",
+      "position": {
+        "x": 1994.9995345962736,
+        "y": -53.23362617357668
+      },
+      "type": "customNode",
+      "data": {
+        "id": "bufferMemory_0",
+        "label": "Buffer Memory",
+        "version": 2,
+        "name": "bufferMemory",
+        "type": "BufferMemory",
+        "baseClasses": [
+          "BufferMemory",
+          "BaseChatMemory",
+          "BaseMemory"
+        ],
+        "category": "Memory",
+        "description": "Retrieve chat messages stored in database",
+        "inputParams": [
+          {
+            "label": "Session Id",
+            "name": "sessionId",
+            "type": "string",
+            "description": "If not specified, a random id will be used. Learn <a target=\"_blank\" href=\"https://docs.flowiseai.com/memory#ui-and-embedded-chat\">more</a>",
+            "default": "",
+            "additionalParams": true,
+            "optional": true,
+            "id": "bufferMemory_0-input-sessionId-string",
+            "display": true
+          },
+          {
+            "label": "Memory Key",
+            "name": "memoryKey",
+            "type": "string",
+            "default": "chat_history",
+            "additionalParams": true,
+            "id": "bufferMemory_0-input-memoryKey-string",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "sessionId": "",
+          "memoryKey": "chat_history"
+        },
+        "outputAnchors": [
+          {
+            "id": "bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
+            "name": "bufferMemory",
+            "label": "BufferMemory",
+            "description": "Retrieve chat messages stored in database",
+            "type": "BufferMemory | BaseChatMemory | BaseMemory"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 256,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1994.9995345962736,
+        "y": -53.23362617357668
+      },
+      "dragging": false
     }
   ],
   "edges": [
@@ -845,18 +1128,43 @@
     {
       "source": "memoryVectorStore_0",
       "sourceHandle": "memoryVectorStore_0-output-retriever-Memory|VectorStoreRetriever|BaseRetriever",
-      "target": "conversationalRetrievalQAChain_0",
-      "targetHandle": "conversationalRetrievalQAChain_0-input-vectorStoreRetriever-BaseRetriever",
+      "target": "retrieverTool_0",
+      "targetHandle": "retrieverTool_0-input-retriever-BaseRetriever",
       "type": "buttonedge",
-      "id": "memoryVectorStore_0-memoryVectorStore_0-output-retriever-Memory|VectorStoreRetriever|BaseRetriever-conversationalRetrievalQAChain_0-conversationalRetrievalQAChain_0-input-vectorStoreRetriever-BaseRetriever"
+      "id": "memoryVectorStore_0-memoryVectorStore_0-output-retriever-Memory|VectorStoreRetriever|BaseRetriever-retrieverTool_0-retrieverTool_0-input-retriever-BaseRetriever"
     },
     {
       "source": "chatGoogleGenerativeAI_0",
       "sourceHandle": "chatGoogleGenerativeAI_0-output-chatGoogleGenerativeAI-ChatGoogleGenerativeAI|ChatGoogleGenerativeAI|BaseChatModel|BaseLanguageModel|Runnable",
-      "target": "conversationalRetrievalQAChain_0",
-      "targetHandle": "conversationalRetrievalQAChain_0-input-model-BaseChatModel",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-model-BaseChatModel",
       "type": "buttonedge",
-      "id": "chatGoogleGenerativeAI_0-chatGoogleGenerativeAI_0-output-chatGoogleGenerativeAI-ChatGoogleGenerativeAI|ChatGoogleGenerativeAI|BaseChatModel|BaseLanguageModel|Runnable-conversationalRetrievalQAChain_0-conversationalRetrievalQAChain_0-input-model-BaseChatModel"
+      "id": "chatGoogleGenerativeAI_0-chatGoogleGenerativeAI_0-output-chatGoogleGenerativeAI-ChatGoogleGenerativeAI|ChatGoogleGenerativeAI|BaseChatModel|BaseLanguageModel|Runnable-toolAgent_0-toolAgent_0-input-model-BaseChatModel"
+    },
+    {
+      "source": "retrieverTool_0",
+      "sourceHandle": "retrieverTool_0-output-retrieverTool-RetrieverTool|DynamicTool|Tool|StructuredTool|Runnable",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "retrieverTool_0-retrieverTool_0-output-retrieverTool-RetrieverTool|DynamicTool|Tool|StructuredTool|Runnable-toolAgent_0-toolAgent_0-input-tools-Tool",
+      "selected": false
+    },
+    {
+      "source": "customTool_0",
+      "sourceHandle": "customTool_0-output-customTool-CustomTool|Tool|StructuredTool|Runnable",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customTool_0-customTool_0-output-customTool-CustomTool|Tool|StructuredTool|Runnable-toolAgent_0-toolAgent_0-input-tools-Tool"
+    },
+    {
+      "source": "bufferMemory_0",
+      "sourceHandle": "bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-memory-BaseChatMemory",
+      "type": "buttonedge",
+      "id": "bufferMemory_0-bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory-toolAgent_0-toolAgent_0-input-memory-BaseChatMemory"
     }
   ]
 }

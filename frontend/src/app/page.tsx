@@ -27,16 +27,17 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/chat', {
+      // Connects to Flowise Cloud API
+      const res = await fetch('https://cloud.flowiseai.com/api/v1/prediction/a249af83-0328-4815-a927-d6be49803fe0', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage })
+        body: JSON.stringify({ question: userMessage })
       });
       
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply || "Sorry, I couldn't process that." }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.text || "Sorry, I couldn't process that." }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Error connecting to the clinic server. Is your Python backend running on port 8000?" }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Error connecting to the Flowise Cloud server. Are you sure the API URL is correct?" }]);
     } finally {
       setIsLoading(false);
     }

@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  flowise:
+    image: flowiseai/flowise
+    container_name: clinic_flowise
+    restart: always
+    environment:
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./flowise_data:/root/.flowise
