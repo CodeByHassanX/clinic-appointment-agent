@@ -1,0 +1,73 @@
+{
+  "name": "24-Hour Reminder Cron",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [ { "field": "hours" } ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [ 250, 300 ]
+    },
+    {
+      "parameters": {
+        "url": "=https://YOUR_SUPABASE_URL.supabase.co/rest/v1/appointments?select=*,patients(*),doctors(*)&appointment_date=eq.{{$now.plus({days: 1}).toFormat('yyyy-MM-dd')}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "name": "Supabase Query",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [ 450, 300 ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Supabase API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "clinic@example.com",
+        "toEmail": "={{$json.patients.email}}",
+        "subject": "Reminder: Appointment Tomorrow!",
+        "text": "=Hi {{$json.patients.name}},\n\nThis is a friendly reminder that you have an appointment with {{$json.doctors.name}} tomorrow at {{$json.appointment_time}}.",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [ 650, 300 ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Supabase Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Query": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

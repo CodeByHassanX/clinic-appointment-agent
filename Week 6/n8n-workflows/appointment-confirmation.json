@@ -1,0 +1,75 @@
+{
+  "name": "Appointment Confirmation & Calendar Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "appointment-booked",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [ 250, 300 ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "calendar": "primary",
+        "start": "={{$json.body.appointment_date}}T{{$json.body.appointment_time}}:00",
+        "end": "={{$json.body.appointment_date}}T{{$json.body.appointment_time}}:00",
+        "summary": "=Clinic Appointment - {{$json.body.patient_name}}",
+        "description": "=Service: {{$json.body.service_name}}\nDoctor: {{$json.body.doctor_name}}\nPhone: {{$json.body.patient_phone}}"
+      },
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [ 450, 300 ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "clinic@example.com",
+        "toEmail": "={{$json.body.patient_email}}",
+        "subject": "Appointment Confirmed!",
+        "text": "=Hi {{$json.body.patient_name}},\n\nYour appointment with {{$json.body.doctor_name}} is confirmed for {{$json.body.appointment_date}} at {{$json.body.appointment_time}}.",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [ 650, 300 ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

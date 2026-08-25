@@ -1,0 +1,74 @@
+{
+  "name": "Reschedule & Calendar Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "appointment-rescheduled",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [ 250, 300 ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": "primary",
+        "eventId": "={{$json.body.google_calendar_event_id}}",
+        "start": "={{$json.body.new_appointment_date}}T{{$json.body.new_appointment_time}}:00",
+        "end": "={{$json.body.new_appointment_date}}T{{$json.body.new_appointment_time}}:00"
+      },
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [ 450, 300 ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "clinic@example.com",
+        "toEmail": "={{$json.body.patient_email}}",
+        "subject": "Appointment Rescheduled",
+        "text": "=Hi {{$json.body.patient_name}},\n\nYour appointment has been successfully rescheduled to {{$json.body.new_appointment_date}} at {{$json.body.new_appointment_time}}.",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [ 650, 300 ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

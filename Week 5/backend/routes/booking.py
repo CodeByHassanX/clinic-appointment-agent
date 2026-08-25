@@ -95,6 +95,24 @@ def book_appointment(request: BookingRequest):
             "notes": "Booked via AI Assistant"
         }).execute()
 
+        # 8. Trigger n8n Automation Webhook
+        import urllib.request, json
+        try:
+            webhook_url = "http://localhost:5678/webhook/appointment-booked"
+            payload = {
+                "patient_name": request.patient_name,
+                "patient_phone": request.patient_phone,
+                "patient_email": "mohamadhasanpkk101@gmail.com", # Hardcoded for testing, usually fetched from DB
+                "doctor_name": request.doctor_name,
+                "service_name": request.service_name,
+                "appointment_date": request.appointment_date,
+                "appointment_time": request.appointment_time
+            }
+            req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json'}, method='POST')
+            urllib.request.urlopen(req)
+        except Exception as e:
+            print("Warning: Failed to trigger n8n webhook:", e)
+
         return {
             "success": True, 
             "message": "Appointment successfully booked and pending staff confirmation.",
