@@ -259,18 +259,26 @@ class ChatRequest(BaseModel):
 def chat_with_agent(request: ChatRequest):
     """
     This endpoint receives messages from the Next.js frontend.
-    It can be hooked up to LangChain/Flowise to process natural language intents.
+    It forwards the message to Flowise/LangChain for AI processing.
     """
-    user_msg = request.message.lower()
+    import requests
     
-    # Simple Mock Intent Detection
-    if "book" in user_msg or "schedule" in user_msg:
-        reply = "I'd be happy to help you book an appointment! Could you please provide your name, phone number, the doctor you'd like to see, and your preferred date/time?"
-    elif "cancel" in user_msg:
-        reply = "I can help you cancel that. Please provide your Appointment ID and the phone number you used to book."
-    elif "reschedule" in user_msg:
-        reply = "To reschedule, I'll need your Appointment ID, your phone number, and your new preferred date/time."
-    else:
-        reply = "I am the Synexus AI Clinic Agent! I can help you book, cancel, or reschedule appointments. How can I assist you today?"
+    # NOTE: Replace this URL with your actual Flowise Chatflow API URL!
+    # Because Next.js uses port 3000, you may need to run Flowise on port 3001.
+    flowise_url = "http://localhost:3001/api/v1/prediction/YOUR_CHATFLOW_ID_HERE"
+    
+    try:
+        # Forward the patient's message to your Flowise AI
+        payload = {"question": request.message}
+        response = requests.post(flowise_url, json=payload, timeout=15)
         
-    return {"reply": reply}
+        if response.status_code == 200:
+            flowise_data = response.json()
+            # Flowise returns the AI's answer in the 'text' field
+            return {"reply": flowise_data.get("text", "I received an empty response from the AI.")}
+        else:
+            return {"reply": "Error: Flowise is returning a bad status code. Did you update the URL?"}
+            
+    except Exception as e:
+        # Fallback message if Flowise is turned off
+        return {"reply": "System Alert: Flowise is currently turned off or the URL is incorrect. Please start Flowise and paste your Chatflow API URL into backend/routes/booking.py!"}
