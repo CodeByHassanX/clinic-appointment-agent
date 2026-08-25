@@ -251,3 +251,26 @@ def reschedule_appointment(request: RescheduleRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+class ChatRequest(BaseModel):
+    message: str
+
+@router.post("/chat")
+def chat_with_agent(request: ChatRequest):
+    """
+    This endpoint receives messages from the Next.js frontend.
+    It can be hooked up to LangChain/Flowise to process natural language intents.
+    """
+    user_msg = request.message.lower()
+    
+    # Simple Mock Intent Detection
+    if "book" in user_msg or "schedule" in user_msg:
+        reply = "I'd be happy to help you book an appointment! Could you please provide your name, phone number, the doctor you'd like to see, and your preferred date/time?"
+    elif "cancel" in user_msg:
+        reply = "I can help you cancel that. Please provide your Appointment ID and the phone number you used to book."
+    elif "reschedule" in user_msg:
+        reply = "To reschedule, I'll need your Appointment ID, your phone number, and your new preferred date/time."
+    else:
+        reply = "I am the Synexus AI Clinic Agent! I can help you book, cancel, or reschedule appointments. How can I assist you today?"
+        
+    return {"reply": reply}
