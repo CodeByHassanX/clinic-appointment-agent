@@ -98,7 +98,7 @@ def book_appointment(request: BookingRequest):
         # 8. Trigger n8n Automation Webhook
         import urllib.request, json
         try:
-            webhook_url = "https://common-donkeys-laugh.loca.lt/webhook/appointment-booked"
+            webhook_url = "https://cool-pillows-pump.loca.lt/webhook/appointment-booked"
             payload = {
                 "patient_name": request.patient_name,
                 "patient_phone": request.patient_phone,
@@ -148,7 +148,7 @@ def cancel_appointment(request: CancelRequest):
         # Trigger n8n Webhook for cancellation
         import urllib.request, json
         try:
-            webhook_url = "https://common-donkeys-laugh.loca.lt/webhook/appointment-cancelled"
+            webhook_url = "https://cool-pillows-pump.loca.lt/webhook/appointment-cancelled"
             payload = {
                 "patient_name": appt["patients"]["name"],
                 "patient_email": "mohamadhasanpkk101@gmail.com",
@@ -231,7 +231,7 @@ def reschedule_appointment(request: RescheduleRequest):
         # 5. Trigger n8n Webhook
         import urllib.request, json
         try:
-            webhook_url = "https://common-donkeys-laugh.loca.lt/webhook/appointment-rescheduled"
+            webhook_url = "https://cool-pillows-pump.loca.lt/webhook/appointment-rescheduled"
             payload = {
                 "patient_name": appt["patients"]["name"],
                 "patient_email": "mohamadhasanpkk101@gmail.com",
