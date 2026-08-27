@@ -109,7 +109,7 @@ def book_appointment(request: BookingRequest):
                 "appointment_time": request.appointment_time
             }
             req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, method='POST')
-            urllib.request.urlopen(req, timeout=2)
+            # urllib.request.urlopen(req, timeout=2)
         except Exception as e:
             print("Warning: Failed to trigger n8n webhook:", e)
 
@@ -158,7 +158,7 @@ def cancel_appointment(request: CancelRequest):
                 "appointment_time": appt["appointment_time"]
             }
             req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, method='POST')
-            urllib.request.urlopen(req, timeout=2)
+            # urllib.request.urlopen(req, timeout=2)
         except Exception as e:
             print("Warning: Failed to trigger n8n webhook:", e)
 
@@ -243,7 +243,7 @@ def reschedule_appointment(request: RescheduleRequest):
                 "new_time": request.new_time
             }
             req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, method='POST')
-            urllib.request.urlopen(req, timeout=2)
+            # urllib.request.urlopen(req, timeout=2)
         except Exception as e:
             print("Warning: Failed to trigger n8n webhook:", e)
 
