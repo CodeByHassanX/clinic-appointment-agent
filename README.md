@@ -1,4 +1,4 @@
-﻿# AI Clinic Appointment Agent 🏥🤖
+# AI Clinic Appointment Agent 🏥🤖
 
 A fully autonomous AI-powered clinic agent that handles patient inquiries, validates availability, and manages appointments end-to-end. Built with a modern stack including FastAPI, Supabase, n8n, and Flowise.
 
@@ -6,45 +6,46 @@ A fully autonomous AI-powered clinic agent that handles patient inquiries, valid
 
 ### 1. Database (Supabase)
 Create a Supabase project and create the following tables:
-- \patients\ (id, name, phone)
-- \doctors\ (id, name, available_days, available_time)
-- \services\ (id, service_name)
-- \ppointments\ (id, patient_id, doctor_id, service_id, appointment_date, appointment_time, status)
+- patients (id, name, phone)
+- doctors (id, name, available_days, available_time)
+- services (id, service_name)
+- ppointments (id, patient_id, doctor_id, service_id, appointment_date, appointment_time, status)
 
 ### 2. Backend (FastAPI)
-Navigate to the \ackend\ folder and install dependencies:
-\\\ash
+Navigate to the ackend folder and install dependencies:
+`ash
 pip install -r requirements.txt
-\\\
-Create a \.env\ file in the \ackend\ folder with:
-\\\env
+`
+Create a .env file in the ackend folder with:
+`env
 SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_key
-\\\
+`
 Run the backend:
-\\\ash
+`ash
 uvicorn main:app --reload
-\\\
+`
 
 ### 3. Frontend (Next.js)
-Navigate to the \rontend\ folder and install dependencies:
-\\\ash
+Navigate to the rontend folder and install dependencies:
+`ash
 npm install
-\\\
+`
 Run the development server:
-\\\ash
+`ash
 npm run dev
-\\\
+`
 
 ### 4. AI & Automation
-- **Flowise:** Import the Chatflow JSON into Flowise and configure the Custom Tools (\ook_appointment\, \eschedule_appointment\, \cancel_appointment\) to point to your live FastAPI endpoints.
+- **Flowise:** Import the Chatflow JSON into Flowise and configure the Custom Tools (ook_appointment, 
+eschedule_appointment, cancel_appointment) to point to your live FastAPI endpoints.
 - **n8n:** Create Webhooks for Booking, Rescheduling, and Canceling. Connect your Gmail and Google Calendar credentials.
 
 ---
 
 ## 📁 Project Structure
 
-\\\
+`	ext
 ├── README.md
 ├── docs/                                 # Documentation and architectural diagrams
 │   ├── requirement-notes.md
@@ -79,13 +80,13 @@ npm run dev
 │   └── ...
 └── test-cases/
     └── booking-cancel-reschedule-tests.md
-\\\
+`
 
 ## 🗓️ Internship Progress: Week by Week
 
 ### Week 1: AI Agent Setup & RAG Knowledge Base
 - Designed the overarching architecture for the Clinic AI.
-- Created the core knowledge base documents (\clinic-faq.md\, \doctors.md\, \services.md\, \policies.md\).
+- Created the core knowledge base documents (clinic-faq.md, doctors.md, services.md, policies.md).
 - Built the foundation for the Retrieval-Augmented Generation (RAG) system so the AI can answer clinic-specific questions accurately.
 
 ### Week 2: LangChain & Intent Detection
@@ -95,24 +96,25 @@ npm run dev
 
 ### Week 3: Database Architecture (Supabase)
 - Designed the PostgreSQL relational database schema.
-- Created tables for \patients\, \doctors\, \services\, and \ppointments\.
-- Wrote the \schema.sql\ and \demo-data.sql\ scripts to seed the database with test doctors and services.
+- Created tables for patients, doctors, services, and ppointments.
+- Wrote the schema.sql and demo-data.sql scripts to seed the database with test doctors and services.
 
 ### Week 4 & 5: Core FastAPI Backend & Booking Logic
 - Built the Python FastAPI backend to serve as the bridge between the AI and the Database.
-- Implemented the \/api/book\ endpoint.
+- Implemented the /api/book endpoint.
 - Added strict validation logic: checking doctor availability, validating working hours, and preventing double-booking.
 - Resolved Supabase Row Level Security (RLS) policies to allow secure inserts.
 
 ### Week 6: n8n Automation (Webhooks, Calendar & Email)
 - Deployed n8n locally via Docker.
 - Connected the FastAPI backend to n8n using HTTP Webhooks.
-- Built the \ppointment-confirmation.json\ workflow.
+- Built the ppointment-confirmation.json workflow.
 - Automated Google Calendar event creation and dynamic Email Confirmations to patients.
 
 ### Week 7: Cancellations & Rescheduling
-- Added \/api/cancel\ and \/api/reschedule\ endpoints to the FastAPI backend.
-- Built n8n workflows (\cancellation-update.json\ and \eschedule-update.json\) to handle calendar cleanup.
+- Added /api/cancel and /api/reschedule endpoints to the FastAPI backend.
+- Built n8n workflows (cancellation-update.json and 
+eschedule-update.json) to handle calendar cleanup.
 - Ensured the database stays perfectly synced with Google Calendar and patient emails.
 
 ### Week 8: Frontend UI & Final Polish
