@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 # Import and include the booking router
-from api.routes.booking import router as booking_router
+from routes.booking import router as booking_router
 app.include_router(booking_router, prefix="/api")
 
 @app.get("/api/health")
