@@ -102,7 +102,7 @@ def book_appointment(request: BookingRequest):
             payload = {
                 "patient_name": request.patient_name,
                 "patient_phone": request.patient_phone,
-                "patient_email": "mohamadhasanpkk101@gmail.com", # Hardcoded for testing, usually fetched from DB
+                "patient_email": getattr(request, "patient_email", "mohamadhasanpkk101@gmail.com"), # Hardcoded for testing, usually fetched from DB
                 "doctor_name": request.doctor_name,
                 "service_name": request.service_name,
                 "appointment_date": request.appointment_date,
@@ -151,7 +151,7 @@ def cancel_appointment(request: CancelRequest):
             webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
             payload = {
                 "patient_name": appt["patients"]["name"],
-                "patient_email": "mohamadhasanpkk101@gmail.com",
+                "patient_email": getattr(request, "patient_email", "mohamadhasanpkk101@gmail.com"),
                 "doctor_name": appt["doctors"]["name"],
                 "service_name": appt["services"]["service_name"],
                 "appointment_date": appt["appointment_date"],
@@ -234,7 +234,7 @@ def reschedule_appointment(request: RescheduleRequest):
             webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
             payload = {
                 "patient_name": appt["patients"]["name"],
-                "patient_email": "mohamadhasanpkk101@gmail.com",
+                "patient_email": getattr(request, "patient_email", "mohamadhasanpkk101@gmail.com"),
                 "doctor_name": doctor["name"],
                 "service_name": appt["services"]["service_name"],
                 "old_date": appt["appointment_date"],
