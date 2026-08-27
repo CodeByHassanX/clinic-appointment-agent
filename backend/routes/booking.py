@@ -1,19 +1,12 @@
-﻿import os
-from datetime import datetime, time
+﻿from pydantic import BaseModel
+from typing import Optional
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from supabase import create_client, Client
+from datetime import datetime
+import urllib.request, json
+from backend.config import get_supabase_client
 
 router = APIRouter()
-
-# Initialize Supabase client
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-
-if SUPABASE_URL and SUPABASE_KEY:
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-else:
-    supabase = None
+supabase = get_supabase_client()
 
 class BookingRequest(BaseModel):
     patient_name: str
@@ -21,48 +14,46 @@ class BookingRequest(BaseModel):
     patient_phone: str
     doctor_name: str
     service_name: str
-    appointment_date: str  # YYYY-MM-DD
-    appointment_time: str  # HH:MM
+    appointment_date: str
+    appointment_time: str
 
 @router.post("/book")
 def book_appointment(request: BookingRequest):
     if not supabase:
-        raise HTTPException(status_code=500, detail="Database connection not configured. Missing SUPABASE_URL or SUPABASE_KEY.")
+        raise HTTPException(status_code=500, detail="Database not configured.")
 
     try:
         # 1. Verify Doctor
-        doctor_res = supabase.table("doctors").select("*").ilike("name", f"%{request.doctor_name}%").execute()
+        doctor_res = supabase.table("doctors").select("*").eq("name", request.doctor_name).execute()
         if not doctor_res.data:
-            return {"success": False, "message": f"Doctor {request.doctor_name} not found in our system."}
+            return {"success": False, "message": f"Doctor {request.doctor_name} not found."}
         doctor = doctor_res.data[0]
 
-        # 2. Verify Service
-        service_res = supabase.table("services").select("*").ilike("service_name", f"%{request.service_name}%").execute()
-        if not service_res.data:
-            return {"success": False, "message": f"Service {request.service_name} not found."}
-        service = service_res.data[0]
-
-        # 3. Check Doctor Availability (Day of Week)
+        # 2. Check Date Validity
         req_date = datetime.strptime(request.appointment_date, "%Y-%m-%d")
-        day_of_week = req_date.strftime("%a") # e.g. 'Mon', 'Tue'
-        
-        # Note: If the request is for a past date, reject it
         if req_date.date() < datetime.now().date():
             return {"success": False, "message": "Cannot book an appointment in the past."}
             
+        day_of_week = req_date.strftime("%a")
         if day_of_week not in doctor["available_days"]:
-            return {"success": False, "message": f"Doctor is only available on {', '.join(doctor['available_days'])}."}
+            return {"success": False, "message": f"{doctor['name']} is only available on {', '.join(doctor['available_days'])}."}
 
-        # 4. Check Doctor Availability (Time)
+        # 3. Check Time Validity
         req_time = datetime.strptime(request.appointment_time, "%H:%M").time()
         start_str, end_str = doctor["available_time"].split("-")
         start_time = datetime.strptime(start_str, "%H:%M").time()
         end_time = datetime.strptime(end_str, "%H:%M").time()
 
         if not (start_time <= req_time <= end_time):
-            return {"success": False, "message": f"Requested time is outside doctor's working hours ({doctor['available_time']})."}
+            return {"success": False, "message": f"Time outside doctor's working hours ({doctor['available_time']})."}
 
-        # 5. Check for Double Booking
+        # 4. Verify Service
+        service_res = supabase.table("services").select("*").eq("service_name", request.service_name).execute()
+        if not service_res.data:
+            return {"success": False, "message": f"Service {request.service_name} not found."}
+        service = service_res.data[0]
+
+        # 5. Check Double Booking
         conflict_res = supabase.table("appointments")\
             .select("id")\
             .eq("doctor_id", doctor["id"])\
@@ -91,19 +82,16 @@ def book_appointment(request: BookingRequest):
             "doctor_id": doctor["id"],
             "service_id": service["id"],
             "appointment_date": request.appointment_date,
-            "appointment_time": request.appointment_time,
-            "status": "pending",
-            "notes": "Booked via AI Assistant"
+            "appointment_time": request.appointment_time
         }).execute()
 
-        # 8. Trigger n8n Automation Webhook
-        import urllib.request, json
+        # Trigger n8n Webhook for booking
         try:
-            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-booked" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-booked"
             payload = {
                 "patient_name": request.patient_name,
                 "patient_phone": request.patient_phone,
-                "patient_email": (request.patient_email.strip() if request.patient_email and "@" in request.patient_email else "mohamadhasanpkk101@gmail.com"), # Hardcoded for testing, usually fetched from DB
+                "patient_email": (request.patient_email.strip() if request.patient_email and "@" in request.patient_email else "mohamadhasanpkk101@gmail.com"),
                 "doctor_name": request.doctor_name,
                 "service_name": request.service_name,
                 "appointment_date": request.appointment_date,
@@ -123,9 +111,13 @@ def book_appointment(request: BookingRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 class CancelRequest(BaseModel):
-    appointment_id: str
+    patient_name: str
     patient_phone: str
+    patient_email: str
+    appointment_date: str
+    doctor_name: str
 
 @router.post("/cancel")
 def cancel_appointment(request: CancelRequest):
@@ -133,44 +125,49 @@ def cancel_appointment(request: CancelRequest):
         raise HTTPException(status_code=500, detail="Database not configured.")
 
     try:
-        # Verify appointment exists and belongs to patient
-        appt_res = supabase.table("appointments").select("*, patients!inner(phone, name), doctors!inner(name), services!inner(service_name)").eq("id", request.appointment_id).execute()
+        # Find the appointment by matching phone and date
+        appt_res = supabase.table("appointments").select("*, patients!inner(phone, name), doctors!inner(name), services!inner(service_name)").eq("appointment_date", request.appointment_date).in_("status", ["pending", "confirmed"]).execute()
         
-        if not appt_res.data:
-            return {"success": False, "message": "Appointment not found."}
-            
-        appt = appt_res.data[0]
-        if appt["patients"]["phone"] != request.patient_phone:
-            return {"success": False, "message": "Phone number does not match the appointment record."}
+        target_appt = None
+        for a in appt_res.data:
+            if a["patients"]["phone"] == request.patient_phone and a["doctors"]["name"] == request.doctor_name:
+                target_appt = a
+                break
+                
+        if not target_appt:
+            return {"success": False, "message": "I could not find an active appointment matching those details."}
 
         # Update status to cancelled
-        supabase.table("appointments").update({"status": "cancelled"}).eq("id", request.appointment_id).execute()
+        supabase.table("appointments").update({"status": "cancelled"}).eq("id", target_appt["id"]).execute()
 
         # Trigger n8n Webhook for cancellation
-        import urllib.request, json
         try:
-            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-cancelled" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-cancelled"
             payload = {
-                "patient_name": appt["patients"]["name"],
+                "patient_name": target_appt["patients"]["name"],
                 "patient_email": (request.patient_email.strip() if request.patient_email and "@" in request.patient_email else "mohamadhasanpkk101@gmail.com"),
-                "doctor_name": appt["doctors"]["name"],
-                "service_name": appt["services"]["service_name"],
-                "appointment_date": appt["appointment_date"],
-                "appointment_time": appt["appointment_time"]
+                "doctor_name": target_appt["doctors"]["name"],
+                "service_name": target_appt["services"]["service_name"],
+                "appointment_date": target_appt["appointment_date"],
+                "appointment_time": target_appt["appointment_time"]
             }
             req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, method='POST')
             urllib.request.urlopen(req, timeout=5)
         except Exception as e:
             print("Webhook Error:", e)
 
-        return {"success": True, "message": "Appointment cancelled successfully."}
+        return {"success": True, "message": f"Your appointment for {request.appointment_date} has been successfully cancelled."}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 class RescheduleRequest(BaseModel):
-    appointment_id: str
+    patient_name: str
     patient_phone: str
+    patient_email: str
+    doctor_name: str
+    old_date: str
     new_date: str
     new_time: str
 
@@ -180,17 +177,19 @@ def reschedule_appointment(request: RescheduleRequest):
         raise HTTPException(status_code=500, detail="Database not configured.")
 
     try:
-        # Verify appointment exists
-        appt_res = supabase.table("appointments").select("*, patients!inner(phone, name), doctors!inner(name, available_days, available_time, id), services!inner(service_name)").eq("id", request.appointment_id).execute()
+        # Find the old appointment
+        appt_res = supabase.table("appointments").select("*, patients!inner(phone, name), doctors!inner(name, available_days, available_time, id), services!inner(service_name)").eq("appointment_date", request.old_date).in_("status", ["pending", "confirmed"]).execute()
         
-        if not appt_res.data:
-            return {"success": False, "message": "Appointment not found."}
+        target_appt = None
+        for a in appt_res.data:
+            if a["patients"]["phone"] == request.patient_phone and a["doctors"]["name"] == request.doctor_name:
+                target_appt = a
+                break
+                
+        if not target_appt:
+            return {"success": False, "message": "I could not find an active appointment on the old date matching your details."}
             
-        appt = appt_res.data[0]
-        if appt["patients"]["phone"] != request.patient_phone:
-            return {"success": False, "message": "Phone number does not match."}
-            
-        doctor = appt["doctors"]
+        doctor = target_appt["doctors"]
 
         # 1. Check Date Validity
         req_date = datetime.strptime(request.new_date, "%Y-%m-%d")
@@ -227,19 +226,18 @@ def reschedule_appointment(request: RescheduleRequest):
             "appointment_date": request.new_date,
             "appointment_time": request.new_time,
             "status": "pending"
-        }).eq("id", request.appointment_id).execute()
+        }).eq("id", target_appt["id"]).execute()
 
         # 5. Trigger n8n Webhook
-        import urllib.request, json
         try:
-            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-rescheduled" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-rescheduled"
             payload = {
-                "patient_name": appt["patients"]["name"],
+                "patient_name": target_appt["patients"]["name"],
                 "patient_email": (request.patient_email.strip() if request.patient_email and "@" in request.patient_email else "mohamadhasanpkk101@gmail.com"),
                 "doctor_name": doctor["name"],
-                "service_name": appt["services"]["service_name"],
-                "old_date": appt["appointment_date"],
-                "old_time": appt["appointment_time"],
+                "service_name": target_appt["services"]["service_name"],
+                "old_date": target_appt["appointment_date"],
+                "old_time": target_appt["appointment_time"],
                 "new_date": request.new_date,
                 "new_time": request.new_time
             }
@@ -253,6 +251,7 @@ def reschedule_appointment(request: RescheduleRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 class ChatRequest(BaseModel):
     message: str
 
@@ -263,23 +262,14 @@ def chat_with_agent(request: ChatRequest):
     It forwards the message to Flowise/LangChain for AI processing.
     """
     import requests
-    
-    # NOTE: Replace this URL with your actual Flowise Chatflow API URL!
-    # Because Next.js uses port 3000, you may need to run Flowise on port 3001.
     flowise_url = "http://localhost:3001/api/v1/prediction/YOUR_CHATFLOW_ID_HERE"
-    
     try:
-        # Forward the patient's message to your Flowise AI
         payload = {"question": request.message}
         response = requests.post(flowise_url, json=payload, timeout=15)
-        
         if response.status_code == 200:
             flowise_data = response.json()
-            # Flowise returns the AI's answer in the 'text' field
             return {"reply": flowise_data.get("text", "I received an empty response from the AI.")}
         else:
             return {"reply": "Error: Flowise is returning a bad status code. Did you update the URL?"}
-            
     except Exception as e:
-        # Fallback message if Flowise is turned off
         return {"reply": "System Alert: Flowise is currently turned off or the URL is incorrect. Please start Flowise and paste your Chatflow API URL into backend/routes/booking.py!"}
