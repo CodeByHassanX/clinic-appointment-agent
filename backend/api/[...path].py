@@ -26,7 +26,7 @@ app.add_middleware(
 from api.routes.booking import router as booking_router
 app.include_router(booking_router, prefix="/api")
 
-@app.get("/health")
+@app.get("/api/health")
 def health_check():
     return {"status": "ok", "message": "Clinic Appointment API is running"}
 
