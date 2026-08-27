@@ -17,6 +17,7 @@ else:
 
 class BookingRequest(BaseModel):
     patient_name: str
+    patient_email: str
     patient_phone: str
     doctor_name: str
     service_name: str
