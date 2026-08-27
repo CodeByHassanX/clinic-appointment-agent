@@ -99,7 +99,7 @@ def book_appointment(request: BookingRequest):
         # 8. Trigger n8n Automation Webhook
         import urllib.request, json
         try:
-            webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-booked" # Disabled to prevent timeout
             payload = {
                 "patient_name": request.patient_name,
                 "patient_phone": request.patient_phone,
@@ -149,7 +149,7 @@ def cancel_appointment(request: CancelRequest):
         # Trigger n8n Webhook for cancellation
         import urllib.request, json
         try:
-            webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-cancelled" # Disabled to prevent timeout
             payload = {
                 "patient_name": appt["patients"]["name"],
                 "patient_email": (request.patient_email if request.patient_email else "mohamadhasanpkk101@gmail.com"),
@@ -232,7 +232,7 @@ def reschedule_appointment(request: RescheduleRequest):
         # 5. Trigger n8n Webhook
         import urllib.request, json
         try:
-            webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/appointment-rescheduled" # Disabled to prevent timeout
             payload = {
                 "patient_name": appt["patients"]["name"],
                 "patient_email": (request.patient_email if request.patient_email else "mohamadhasanpkk101@gmail.com"),
