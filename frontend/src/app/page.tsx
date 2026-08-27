@@ -31,13 +31,19 @@ export default function Chatbot() {
       const res = await fetch('https://cloud.flowiseai.com/api/v1/prediction/a249af83-0328-4815-a927-d6be49803fe0', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: userMessage })
+        body: JSON.stringify({ 
+          question: userMessage,
+          overrideConfig: {
+            sessionId: "demo-session-123"
+          }
+        })
       });
       
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.text || "Sorry, I couldn't process that." }]);
+      const botReply = data.text || data.message || data.error || "Sorry, Flowise returned an empty response.";
+      setMessages(prev => [...prev, { role: 'assistant', content: botReply }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Error connecting to the Flowise Cloud server. Are you sure the API URL is correct?" }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Error connecting to the Flowise Cloud server." }]);
     } finally {
       setIsLoading(false);
     }
