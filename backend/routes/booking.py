@@ -98,7 +98,7 @@ def book_appointment(request: BookingRequest):
         # 8. Trigger n8n Automation Webhook
         import urllib.request, json
         try:
-            webhook_url = "http://localhost:5678/webhook/" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
             payload = {
                 "patient_name": request.patient_name,
                 "patient_phone": request.patient_phone,
@@ -109,7 +109,7 @@ def book_appointment(request: BookingRequest):
                 "appointment_time": request.appointment_time
             }
             req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, method='POST')
-            # urllib.request.urlopen(req, timeout=2)
+            urllib.request.urlopen(req, timeout=2)
         except Exception as e:
             print("Warning: Failed to trigger n8n webhook:", e)
 
@@ -148,7 +148,7 @@ def cancel_appointment(request: CancelRequest):
         # Trigger n8n Webhook for cancellation
         import urllib.request, json
         try:
-            webhook_url = "http://localhost:5678/webhook/" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
             payload = {
                 "patient_name": appt["patients"]["name"],
                 "patient_email": "mohamadhasanpkk101@gmail.com",
@@ -158,7 +158,7 @@ def cancel_appointment(request: CancelRequest):
                 "appointment_time": appt["appointment_time"]
             }
             req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, method='POST')
-            # urllib.request.urlopen(req, timeout=2)
+            urllib.request.urlopen(req, timeout=2)
         except Exception as e:
             print("Warning: Failed to trigger n8n webhook:", e)
 
@@ -231,7 +231,7 @@ def reschedule_appointment(request: RescheduleRequest):
         # 5. Trigger n8n Webhook
         import urllib.request, json
         try:
-            webhook_url = "http://localhost:5678/webhook/" # Disabled to prevent timeout
+            webhook_url = "https://shah1.app.n8n.cloud/webhook/" # Disabled to prevent timeout
             payload = {
                 "patient_name": appt["patients"]["name"],
                 "patient_email": "mohamadhasanpkk101@gmail.com",
@@ -243,7 +243,7 @@ def reschedule_appointment(request: RescheduleRequest):
                 "new_time": request.new_time
             }
             req = urllib.request.Request(webhook_url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true'}, method='POST')
-            # urllib.request.urlopen(req, timeout=2)
+            urllib.request.urlopen(req, timeout=2)
         except Exception as e:
             print("Warning: Failed to trigger n8n webhook:", e)
 
