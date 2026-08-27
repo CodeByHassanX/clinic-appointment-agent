@@ -1,5 +1,7 @@
 ﻿# AI Clinic Appointment Agent 🏥🤖
 
+**🚀 Live Demo:** [https://clinic-appointment-agent-q1um-jaw8yjymm.vercel.app/](https://clinic-appointment-agent-q1um-jaw8yjymm.vercel.app/)
+
 A fully autonomous AI-powered clinic agent that handles patient inquiries, validates availability, and manages appointments end-to-end. Built with a modern stack including FastAPI, Supabase, n8n, and Flowise.
 
 ## 🛠️ How to Run Locally (For Testers & Reviewers)
