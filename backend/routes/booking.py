@@ -1,9 +1,9 @@
-﻿from pydantic import BaseModel
+from pydantic import BaseModel
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 from datetime import datetime
 import urllib.request, json
-from backend.config import get_supabase_client
+from config import get_supabase_client
 
 router = APIRouter()
 supabase = get_supabase_client()
